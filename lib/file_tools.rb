@@ -24,7 +24,7 @@ end
 # _time_ :: time information to change
 def change_exif_date_time_original(path, time)
   photo = MiniExiftool.new(path, ignore_minor_erros: true)
-  photo.date_time_original = time.strftime('%Y:%m:%d %H:%M:%S')
+  photo.date_time_original = time.localtime.strftime('%Y:%m:%d %H:%M:%S')
   photo.gps_date_stamp = time.utc.strftime('%Y:%m:%d')
   photo.gps_time_stamp = time.utc.strftime('%H:%M:%S')
   photo.save!
@@ -33,7 +33,7 @@ end
 # rename file name basedon time prefix
 def rename_date_prefix(path, base_name, time)
   dest_file = File.join(File.dirname(path),
-                        time.strftime('%Y%m%d%H%M%S') +
+                        time.localtime.strftime('%Y%m%d%H%M%S') +
                         '_' + base_name)
   puts "  move to #{dest_file}"
   FileUtils.mv(path, dest_file)
