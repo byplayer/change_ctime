@@ -24,7 +24,9 @@ end
 # _time_ :: time information to change
 def change_exif_date_time_original(path, time)
   photo = MiniExiftool.new(path, ignore_minor_erros: true)
-  photo.date_time_original = time
+  photo.date_time_original = time.strftime('%Y:%m:%d %H:%M:%S')
+  photo.gps_date_stamp = time.utc.strftime('%Y:%m:%d')
+  photo.gps_time_stamp = time.utc.strftime('%H:%M:%S')
   photo.save!
 end
 
