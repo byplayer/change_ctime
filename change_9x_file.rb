@@ -42,7 +42,7 @@ files.each do |f|
     '00' + format('%02d', min) + format('%02d', sec),
                             '%Y%m%d %H%M%S')
 
-  puts file_time
+  puts "  #{file_time}"
   change_ctime(f, file_time)
   change_exif_date_time_original(f, file_time) if '.jpg' == File.extname(f).downcase
   rename_date_prefix(f, Regexp.last_match[4] + File.extname(f),

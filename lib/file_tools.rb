@@ -33,7 +33,6 @@ def rename_date_prefix(path, base_name, time)
   dest_file = File.join(File.dirname(path),
                         time.strftime('%Y%m%d%H%M%S') +
                         '_' + base_name)
-  puts base_name
-  puts dest_file
-  # FileUtils.mv(path, dest_file)
+  puts "  move to #{dest_file}"
+  FileUtils.mv(path, dest_file)
 end
