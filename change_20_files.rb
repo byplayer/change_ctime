@@ -21,7 +21,7 @@ old_date = ''
 files.each do |f|
   next unless File.file?(f)
   basename = File.basename(f)
-  puts basename
+  puts f
 
   file_time = nil
 
@@ -33,8 +33,12 @@ files.each do |f|
   end
   if exif && exif.date_time_original
     file_time = exif.date_time_original
-    puts "  exif time:#{file_time}"
-    base = File.extname(f).downcase
+    puts "  exif date_time_original:#{file_time}"
+    base = File.basename(f, '.*') + File.extname(f).downcase
+  elsif exif && exif.MediaCreateDate
+    file_time = exif.MediaCreateDate
+    puts "  exif MediaCreateDate:#{file_time}"
+    base = File.basename(f, '.*') + File.extname(f).downcase
   elsif basename =~
     /^(2[0-9]{3})[-_]?([0-9]{2})[-_]?([0-9]{2})[-_]?([0-9]{6})/
     file_time = nil
@@ -50,8 +54,7 @@ files.each do |f|
     puts "  base: #{base}"
 
     puts '  change ctime and exif'
-    change_ctime(f, file_time)
-    change_exif_date_time_original(f, file_time) if '.jpg' == File.extname(f).downcase
+    # change_exif_date_time_original(f, file_time) if '.jpg' == File.extname(f).downcase
   elsif basename =~
               /^(2[0-9]{3})[-_]?([0-9]{2})[-_]?([0-9]{2})[-_]?(.*)([-_]?[0-9]*)?/
 
@@ -86,11 +89,11 @@ files.each do |f|
     puts "  base: #{base}"
 
     puts '  change ctime and exif'
-    change_ctime(f, file_time)
-    change_exif_date_time_original(f, file_time) if '.jpg' == File.extname(f).downcase
+    # change_exif_date_time_original(f, file_time) if '.jpg' == File.extname(f).downcase
   else
     puts "!!!!!! error !!!!!!"
     exit(1)
   end
+  change_ctime(f, file_time)
   rename_date_prefix(f, base, file_time) if file_time
 end
