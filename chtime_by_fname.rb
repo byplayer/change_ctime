@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'time'
+require_relative 'lib/file_tools'
 
 Dir.glob(File.join(ARGV[0], '**', '*')) do |f|
   puts f
@@ -17,9 +17,5 @@ Dir.glob(File.join(ARGV[0], '**', '*')) do |f|
                             Regexp.last_match[6],
                             '%Y%m%d %H%M%S')
   puts file_time
-  File.utime(file_time,
-             file_time,
-             f)
-  cmd = "setfile -d \"#{file_time.strftime('%m/%d/%Y %H:%M:%S')}\" '#{f}'"
-  `#{cmd}`
+  change_ctime(f, file_time)
 end

@@ -22,6 +22,10 @@ files.each do |f|
   next unless File.file?(f)
   basename = File.basename(f)
   puts f
+  if File.size(f) == 0
+    puts "  error:file size is 0!!!!!!"
+    exit(1)
+  end
 
   file_time = nil
 
@@ -40,7 +44,7 @@ files.each do |f|
     puts "  exif MediaCreateDate:#{file_time}"
     base = File.basename(f, '.*') + File.extname(f).downcase
   elsif basename =~
-    /^(2[0-9]{3})[-_]?([0-9]{2})[-_]?([0-9]{2})[-_]?([0-9]{6})/
+    /^(2[0-9]{3})[-_]?([0-9]{2})[-_]?([0-9]{2})[-_\.]?([0-9]{6})/
     file_time = nil
     year = Regexp.last_match[1]
 
@@ -55,6 +59,18 @@ files.each do |f|
 
     puts '  change ctime and exif'
     # change_exif_date_time_original(f, file_time) if '.jpg' == File.extname(f).downcase
+  elsif basename =~  /^Screenshot[ _]([0-9]{4})-([0-9]{2})-([0-9]{2})[ -]([0-9]{2})-([0-9]{2})-([0-9]{2})/
+    file_time = Time.strptime(Regexp.last_match[1]+
+                              Regexp.last_match[2]+
+                              Regexp.last_match[3]+
+                              Regexp.last_match[4]+
+                              Regexp.last_match[5]+
+                              Regexp.last_match[6],
+                              '%Y%m%d%H%M%S')
+    puts 'Screenshot'
+    puts "  #{file_time}"
+    base = File.extname(f).downcase
+    puts "  base: #{base}"
   elsif basename =~
               /^(2[0-9]{3})[-_]?([0-9]{2})[-_]?([0-9]{2})[-_]?(.*)([-_]?[0-9]*)?/
 

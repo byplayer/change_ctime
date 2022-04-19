@@ -13,14 +13,17 @@ sec = 0
 Dir.glob(File.join(ARGV[2], '**', '*')) do |f|
   puts f
 
-  new_fname = "#{ymd}#{format('%02d%02d%02d', hour, min, sec)}_#{File.basename(f)}"
+  file_time = Time.strptime("#{ymd}#{format('%02d%02d%02d', hour, min, sec)}",
+                            '%Y%m%d%H%M%S')
+  new_fname = "#{file_time.strftime('%Y%m%d%H%M%S')}_#{File.basename(f)}"
   new_path = check_fname_overlapping(File.join(File.dirname(f), new_fname))
   puts "  move to:#{new_path}"
   FileUtils.mv(f, new_path)
+  change_ctime(new_path, file_time)
 
-  sec += 1
-  if sec >= 60
-    sec = 0
-    min += 1
+  min += 1
+  if min >= 60
+    min = 0
+    hour += 1
   end
 end
