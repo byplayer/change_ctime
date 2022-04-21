@@ -12,4 +12,8 @@ if photo && photo.MediaCreateDate
   puts "media create date:#{photo.MediaCreateDate}"
 end
 
+if photo && photo.filemodifydate
+  puts "filemodifydate:#{photo.filemodifydate}"
+end
+
 puts photo.inspect
